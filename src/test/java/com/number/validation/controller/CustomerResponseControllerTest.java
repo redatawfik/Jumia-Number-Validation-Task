@@ -18,13 +18,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(CustomerController.class)
-class CustomerControllerTest {
+class CustomerResponseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private CustomerService dogService;
+    private CustomerService customerService;
 
     @Test
     void getCustomersWithoutFilters() throws Exception {
@@ -33,7 +33,7 @@ class CustomerControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("[]"));
 
-        verify(dogService, times(1)).getCustomers("Ethiopia", true);
+        verify(customerService, times(1)).getCustomers("Ethiopia", true);
     }
 
 

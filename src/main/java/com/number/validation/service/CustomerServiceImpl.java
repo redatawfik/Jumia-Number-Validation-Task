@@ -1,81 +1,61 @@
 package com.number.validation.service;
 
-import com.number.validation.dao.CustomerDao;
-import com.number.validation.model.Country;
 import com.number.validation.model.Customer;
+import com.number.validation.model.CustomerResponse;
+import com.number.validation.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
-    private CustomerDao customerDao;
+    private CustomerRepository customerRepository;
 
     @Override
-    public List<Customer> getCustomers(String country, Boolean valid) {
-        List<Customer> customerList = customerDao.getAll();
+    public List<CustomerResponse> getCustomers(String country, Boolean state) {
+        List<Customer> customerList = customerRepository.findAll();
 
-        if (country != null) {
-            customerList = getCustomersForCountry(customerList, country);
+        List<CustomerResponse> customerResponseList = getCustomerResponse(customerList);
+
+
+        if (!ObjectUtils.isEmpty(country)) {
+            customerResponseList = filterCustomersByCountry(customerResponseList, country);
         }
 
-        if (valid == null) {
-            return customerList;
-        } else if (valid) {
-            return getCustomersWithValidNumber(customerList);
-        } else {
-            return getCustomersWithInvalidNumbers(customerList);
+        if (state != null) {
+            customerResponseList = filterCustomersByState(customerResponseList, state);
         }
+
+        return customerResponseList;
     }
 
-    private List<Customer> getCustomersForCountry(List<Customer> customerList, String countryText) {
-
-        List<Customer> result = new ArrayList<>();
-
-        Country country = getCountryFromText(countryText);
-        if (country == null) return result;
-
+    private List<CustomerResponse> getCustomerResponse(List<Customer> customerList) {
+        List<CustomerResponse> customerResponseList = new ArrayList<>();
         for (Customer customer : customerList) {
-            if (customer.getCountry() == country) {
-                result.add(customer);
-            }
+            CustomerResponse customerResponse = new CustomerResponse(customer);
+            customerResponseList.add(customerResponse);
         }
 
-        return result;
+        return customerResponseList;
     }
 
-    private Country getCountryFromText(String countryText) {
-        if (countryText == null) return null;
-        for (Country country : Country.values()) {
-            if (country.toString().equals(countryText)) {
-                return country;
-            }
-        }
-        return null;
+    private List<CustomerResponse> filterCustomersByCountry(List<CustomerResponse> customerResponseList, String country) {
+
+        return customerResponseList
+                .stream()
+                .filter(customer -> customer.getCountry().toString().equalsIgnoreCase(country.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
+    private List<CustomerResponse> filterCustomersByState(List<CustomerResponse> customerResponseList, boolean state) {
 
-    private List<Customer> getCustomersWithValidNumber(List<Customer> customerList) {
-        List<Customer> validCustomerNumbers = new ArrayList<>();
-        for (Customer customer : customerList) {
-            if (customer.isValidNumber()) {
-                validCustomerNumbers.add(customer);
-            }
-        }
-        return validCustomerNumbers;
-    }
-
-    private List<Customer> getCustomersWithInvalidNumbers(List<Customer> customerList) {
-        List<Customer> validCustomerNumbers = new ArrayList<>();
-        for (Customer customer : customerList) {
-            if (!customer.isValidNumber()) {
-                validCustomerNumbers.add(customer);
-            }
-        }
-        return validCustomerNumbers;
+        return customerResponseList.stream()
+                .filter(c -> c.isValidNumber() == state).collect(Collectors.toList());
     }
 }

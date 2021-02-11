@@ -1,6 +1,6 @@
 package com.number.validation.controller;
 
-import com.number.validation.model.Customer;
+import com.number.validation.model.CustomerResponse;
 import com.number.validation.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +16,13 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-
     @GetMapping("/")
-    public ResponseEntity<List<Customer>> getCustomerNumbers(
+    public ResponseEntity<List<CustomerResponse>> getCustomerNumbers(
             @RequestParam(value = "country", required = false) String country,
             @RequestParam(value = "valid", required = false) Boolean isValidNumber) {
 
-        List<Customer> customerList = customerService.getCustomers(country, isValidNumber);
+        List<CustomerResponse> customerResponseList = customerService.getCustomers(country, isValidNumber);
 
-        return ResponseEntity.ok(customerList);
+        return ResponseEntity.ok(customerResponseList);
     }
 }

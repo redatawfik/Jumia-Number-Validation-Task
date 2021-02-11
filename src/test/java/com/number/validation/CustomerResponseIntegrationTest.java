@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class CustomerIntegrationTest {
+public class CustomerResponseIntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -28,7 +28,7 @@ public class CustomerIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void getAllDogs() {
+    public void getCustomers() {
         ResponseEntity<List> response =
                 this.restTemplate.getForEntity("http://localhost:" + port + "/", List.class);
 

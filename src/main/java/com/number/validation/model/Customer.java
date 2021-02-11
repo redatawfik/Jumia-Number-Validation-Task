@@ -1,58 +1,54 @@
 package com.number.validation.model;
 
-import com.number.validation.service.NumberValidationUtils;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
 public class Customer {
-    private final int id;
-    private final String name;
-    private final String phoneNumber;
-    private Country country;
-    private String countryCode;
-    private boolean isValidNumber;
 
-    public Customer(int id, String name, String phoneNumber) {
-        this.id = id;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
+    @Id
+    private Integer id;
 
-        setCountry(phoneNumber);
-        setCountryCode();
-        setValidNumber(phoneNumber);
+    private String name;
+
+    private String phone;
+
+    public Customer() {
     }
 
-    public int getId() {
+    public Customer(Integer id, String name, String phone) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+    }
+
+    public Customer(Customer customer) {
+        this.id = customer.getId();
+        this.name = customer.getName();
+        this.phone = customer.getPhone();
+    }
+
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Country getCountry() {
-        return country;
+    public String getPhone() {
+        return phone;
     }
 
-    private void setCountry(String phoneNumber) {
-        this.country = NumberValidationUtils.getCountryForNumber(phoneNumber);
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    private void setCountryCode() {
-        this.countryCode = NumberValidationUtils.getCountryCode(this.country);
-    }
-
-    public boolean isValidNumber() {
-        return isValidNumber;
-    }
-
-    private void setValidNumber(String phoneNumber) {
-        this.isValidNumber = NumberValidationUtils.isValidNumber(phoneNumber);
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

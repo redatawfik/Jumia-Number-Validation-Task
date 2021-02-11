@@ -1,7 +1,8 @@
 package com.number.validation.service;
 
-import com.number.validation.dao.CustomerDao;
 import com.number.validation.model.Customer;
+import com.number.validation.model.CustomerResponse;
+import com.number.validation.repository.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-class CustomerServiceImplTest {
+class CustomerResponseServiceImplTest {
 
     private final String MOROCCO = "Morocco";
 
@@ -28,7 +30,7 @@ class CustomerServiceImplTest {
     private CustomerServiceImpl customerService;
 
     @MockBean
-    private CustomerDao customerDao;
+    private CustomerRepository customerRepository;
 
 
     @BeforeEach
@@ -40,51 +42,55 @@ class CustomerServiceImplTest {
 
     @Test
     void getCustomersWithoutFilters() {
-        Mockito.when(customerDao.getAll()).thenReturn(customerList);
+        Mockito.when(customerRepository.findAll()).thenReturn(customerList);
 
         String country = null;
         Boolean valid = null;
 
-        List<Customer> actual = customerService.getCustomers(country, valid);
+        List<CustomerResponse> actual = customerService.getCustomers(country, valid);
 
-        assertEquals(actual, customerList);
+        assertEquals(customerList.size(), actual.size());
+        assertEquals(actual.get(0).getId(), customerList.get(0).getId());
+        assertEquals(actual.get(1).getId(), customerList.get(1).getId());
+        assertEquals(actual.get(2).getId(), customerList.get(2).getId());
     }
 
     @Test
     void getCustomersWithValidNumberFilter() {
-        Mockito.when(customerDao.getAll()).thenReturn(customerList);
+        Mockito.when(customerRepository.findAll()).thenReturn(customerList);
 
         String country = null;
         Boolean valid = true;
 
-        List<Customer> actual = customerService.getCustomers(country, valid);
+        List<CustomerResponse> actual = customerService.getCustomers(country, valid);
 
         assertEquals(actual.size(), 2);
-        assertEquals(actual.get(0).getId(), 1);
-        assertEquals(actual.get(1).getId(), 3);
+
+        assertTrue(actual.get(0).isValidNumber());
+        assertTrue(actual.get(1).isValidNumber());
     }
 
     @Test
     void getCustomersWithCountryAndValidNumberFilter() {
-        Mockito.when(customerDao.getAll()).thenReturn(customerList);
+        Mockito.when(customerRepository.findAll()).thenReturn(customerList);
 
-        String country = MOROCCO;
         Boolean valid = true;
 
-        List<Customer> actual = customerService.getCustomers(country, valid);
+        List<CustomerResponse> actual = customerService.getCustomers(MOROCCO, valid);
 
         assertEquals(actual.size(), 1);
-        assertEquals(actual.get(0).getId(), 1);
+        assertEquals(actual.get(0).getCountry().toString(), MOROCCO);
+        assertTrue(actual.get(0).isValidNumber());
     }
 
     @Test
-    void getCustomersWithCountryAndInvalidNumberFilter() {
-        Mockito.when(customerDao.getAll()).thenReturn(customerList);
+    void getCustomersWithCountryNotExist() {
+        Mockito.when(customerRepository.findAll()).thenReturn(customerList);
 
-        String country = MOROCCO;
-        Boolean valid = false;
+        String country = "Egypt";
+        Boolean valid = null;
 
-        List<Customer> actual = customerService.getCustomers(country, valid);
+        List<CustomerResponse> actual = customerService.getCustomers(country, valid);
 
         assertEquals(actual.size(), 0);
     }
