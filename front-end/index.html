@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Jumia Phone Validation</title>
+    <link rel="stylesheet" href="app.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <section id="control-center">
+        <label for="country">Choose a Country:</label>
+        <select name="countries" id="country" onchange="countrySelected()">
+            <option value="none">None</option>
+            <option value="cameroon">Cameroon</option>
+            <option value="ethiopia">Ethiopia</option>
+            <option value="morocco">Morocco</option>
+            <option value="mozambique">Mozambique</option>
+            <option value="uganda">Uganda</option>
+        </select>
+
+        <label for="state">Number state:</label>
+        <select name="state" id="state" onchange="validSelected()">
+            <option value="none">None</option>
+            <option value="valid">Valid</option>
+            <option value="invalid">Invalid</option>
+        </select>
+    </section>
+
+    <table id="customer_table">
+        <thead>
+            <tr>
+                <th>Country</th>
+                <th>Country code</th>
+                <th>Valid</th>
+                <th>Name</th>
+                <th>Phone number</th>
+            </tr>
+        </thead>
+    </table>
+</body>
+
+</html>
