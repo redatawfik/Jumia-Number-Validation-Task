@@ -2,7 +2,7 @@ package com.number.validation.model;
 
 import com.number.validation.service.NumberValidationUtils;
 
-public class CustomerResponse extends Customer {
+public class CustomerResponse extends Customer implements Comparable<CustomerResponse> {
 
     private Country country;
     private String countryCode;
@@ -48,5 +48,14 @@ public class CustomerResponse extends Customer {
 
     public boolean isValidNumber() {
         return isValidNumber;
+    }
+
+    @Override
+    public int compareTo(CustomerResponse otherCustomer) {
+        if (country != otherCustomer.getCountry()) {
+            return country.toString().compareTo(otherCustomer.getCountry().toString());
+        } else {
+            return isValidNumber ? -1 : 1;
+        }
     }
 }

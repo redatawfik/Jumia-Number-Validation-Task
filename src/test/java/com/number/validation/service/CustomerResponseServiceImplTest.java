@@ -50,9 +50,6 @@ class CustomerResponseServiceImplTest {
         List<CustomerResponse> actual = customerService.getCustomers(country, valid);
 
         assertEquals(customerList.size(), actual.size());
-        assertEquals(actual.get(0).getId(), customerList.get(0).getId());
-        assertEquals(actual.get(1).getId(), customerList.get(1).getId());
-        assertEquals(actual.get(2).getId(), customerList.get(2).getId());
     }
 
     @Test

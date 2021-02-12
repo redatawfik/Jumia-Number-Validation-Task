@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerResponseList = filterCustomersByState(customerResponseList, state);
         }
 
+        Collections.sort(customerResponseList);
         return customerResponseList;
     }
 
