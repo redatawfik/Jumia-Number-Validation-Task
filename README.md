@@ -4,7 +4,7 @@ A single page application in Java uses a SQLite database to list phone numbers.
 
 ## Backend
 The backend is a spring boot application that run inside a docker container.
-
+You can access the API on localhost port 8080
 ### Building
 
 Navigate to Backend directory
@@ -32,7 +32,7 @@ mvn test
 
 ### Frontend
 The frontend is a single HTML page to show all numbers in a table and get filters input from the user.
-Build docker image for the frontend.
+You can access the webpage on localhost port 80 
 
 Navigate to Frontend directory
 ```
